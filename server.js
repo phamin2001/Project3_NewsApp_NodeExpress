@@ -17,7 +17,7 @@ const store = new MongoDBStore({
 store.on('error', function(error) {
     console.log(error);
   });
-  
+
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
@@ -27,7 +27,7 @@ app.use(session({
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-const corsOption = {
+const corsOptions = {
     origin: 'http://localhost:3000',
     credentials: true,
     optionsSuccessStatus: 200
@@ -40,6 +40,10 @@ const authController    = require('./controllers/authController');
 
 app.use('/api/v1/news', newsController);
 app.use('/auth', authController);
+
+app.get('/', (req, res) => {
+    res.render
+})
 
 app.listen(process.env.PORT || 9000, () => {
     console.log('listening on port 9000');

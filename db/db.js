@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const connectionString = process.env.MONGODB_URI;
 
-mongoose.connect('mongodb://localhost/newsProject', {
+mongoose.connect(connectionString, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false
