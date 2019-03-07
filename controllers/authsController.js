@@ -14,14 +14,27 @@ router.post('/registration', async (req, res) => {
     userDbEntry.displayName  = req.session.displayName;
 
     try {
-        const createdUser    = await User.create(userDbEntry);
-        req.session.username = createdUser.username;
-        req.session.logged   = true;
+        const userExists      = await User.findOne({'username': userDbEntry.username});
+        if(!userExists) {
+            const createdUser    = await User.create(userDbEntry);
+            req.session.message  = '';
+            req.session.username = createdUser.username;
+            req.session.logged   = true;
 
-        res.json({
-            status: 200,
-            data:   'register successful'
-        })
+            res.json({
+                status:     200,
+                data:       'register successful',
+                username:   req.session.username
+            })
+        } else {
+            console.log('User Exists.');
+            req.session.message = "User aleready exists, make another account.";
+            res.json({
+                status:   400, 
+                message:  req.session.message
+            })
+        }
+        
     } catch (err) {
         console.log(err);
         res.send(err);
@@ -39,8 +52,11 @@ router.post('/login', async (req, res) => {
                req.session.logged   = true
 
                res.json({
-                   status:  200,
-                   data:    'login successful'
+                   status:   200,
+                   data:     'login successful',
+                   username: req.session.username,
+                   message:  req.session.message
+
                });
            } else {
                req.session.message = 'Username or Password are incorrect. Try againe.';

@@ -35,15 +35,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(morgan('short'));
 
-const newsController    = require('./controllers/newsController');
-const authController    = require('./controllers/authController');
+const authsController    = require('./controllers/authsController');
+const topicsController  = require('./controllers/topicsController');
 
-app.use('/api/v1/news', newsController);
-app.use('/auth', authController);
-
-app.get('/', (req, res) => {
-    res.render
-})
+app.use('/api/v1/topics', topicsController);
+app.use('/auths', authsController);
 
 app.listen(process.env.PORT || 9000, () => {
     console.log('listening on port 9000');
