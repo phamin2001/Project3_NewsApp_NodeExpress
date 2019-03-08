@@ -1,10 +1,96 @@
 const express   = require('express');
 const router    = express.Router();
+const bcrypt    = require('bcryptjs');
 const User      = require('../models/users');
 const Topic     = require('../models/topic');
 
-router.get('/')
+// create route
+router.post('/', async (req, res) => {
+    const password       = req.body.password;
+    const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
+    const userDbEntry        = {};
+    userDbEntry.username     = req.session.username;
+    userDbEntry.password     = hashedPassword;
+    userDbEntry.email        = req.session.email;
+    userDbEntry.displayName  = req.session.displayName;
 
+    try {
+        const userExists      = await User.findOne({'username': userDbEntry.username});
+        if(!userExists) {
+            const createdUser    = await User.create(userDbEntry);
+            req.session.message  = '';
+            req.session.username = createdUser.username;
+            req.session.logged   = true;
 
-module. exports = router;
+            res.json({
+                status:     200,
+                data:       'register successful',
+                username:   req.session.username
+            })
+        } else {
+            console.log('User Exists.');
+            req.session.message = "User aleready exists, make another account.";
+            res.json({
+                status:   400, 
+                message:  req.session.message
+            })
+        }
+        
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
+
+// show route
+router.get('/:id', async (req, res) => {
+    try {
+        const foundUser = await User.findById(req.session.userId);
+        res.json({
+            status: 200, 
+            user:   foundUser,
+
+        })
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
+
+// update route
+router.put('/:id/', async (req, res) => {
+    try {
+        if(req.session.userId === req.params.id) {
+            const updatedUser = await User.findByIdAndUpdate(req.session.userId, req.body);
+            res.send({
+                status: 200,
+                user: updatedUser
+            })
+        } else {
+           throw new Error('You are not authorized');
+        }
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+        if(req.session.userId === req.params.id) {
+            const deletedUser = await User.findByIdAndDelete(req.session.userId);
+            res.json({
+                status: 200, 
+                user: deletedUser
+            })
+        } else {
+            throw new Error('You are not authorized.');
+        }
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
+
+module. exports = router; 
