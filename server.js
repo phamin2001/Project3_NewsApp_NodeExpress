@@ -36,10 +36,12 @@ app.use(cors(corsOptions));
 app.use(morgan('short'));
 
 const authsController    = require('./controllers/authsController');
-const topicsController  = require('./controllers/topicsController');
+const topicsController   = require('./controllers/topicsController');
+const usersController    = require('./controllers/usersController');
 
 app.use('/api/v1/topics', topicsController);
 app.use('/auths', authsController);
+app.use('/users', usersController);
 
 app.listen(process.env.PORT || 9000, () => {
     console.log('listening on port 9000');

@@ -1,6 +1,8 @@
 const express = require('express');
 const router  = express.Router();
-const Topics    = require('../models/topic');
+const Topics  = require('../models/topic');
+const User    = require('../models/user');
+
 
 router.get('/', async (req, res) => {
     try {
@@ -42,3 +44,5 @@ router.get('/new', async (req, res) => {
 
 
 })
+
+module.exports = router;
