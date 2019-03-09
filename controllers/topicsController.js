@@ -35,8 +35,10 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         if(req.session.logged) {
-            const loggedUser    = await User.findById(req.session.userId);
-            const createdTopic  = await Topic.create(req.body);
+            const findLoggedUser             = User.findById(req.session.userId);
+            const findCreatedTopic           = Topic.create(req.body);
+            const [loggedUser, createdTopic] = await Promise.all([findLoggedUser, findCreatedTopic]);
+
             loggedUser.topics.push(createdTopic);
             await loggedUser.save();
             res.json({
@@ -56,8 +58,9 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         if(req.session.logged) {
-            const updatedTopic  = await Topic.findByIdAndUpdate(req.params.id, req.body, {new: true});
-            const foundUsers    = await User.findOne({'topics._id': req.params.id});
+            const findUpdatedTopic           = Topic.findByIdAndUpdate(req.params.id, req.body, {new: true});
+            const findFoundUsers             = User.findOne({'topics._id': req.params.id});
+            const [updatedTopic, foundUsers] = await Promise.all([findUpdatedTopic, findFoundUsers]);
 
             foundUsers.topics.id(req.params.id).remove();
             foundUsers.topics.push(updatedTopic);
@@ -79,8 +82,9 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         if(req.session.logged) {
-            const deletedTopic    = await Topic.findByIdAndDelete(req.params.id);
-            const foundUser       = await User.findOne({'topics._id': req.params.id});
+            const findDeletedTopic    = Topic.findByIdAndDelete(req.params.id);
+            const findFoundUser       = User.findOne({'topics._id': req.params.id});
+            const [deletedTopic, foundUser] = await Promise.all([findDeletedTopic, findFoundUser]);
 
             foundUser.topics.id(req.params.id).remove();
             await foundUser.save();
