@@ -2,9 +2,8 @@ const express   = require('express');
 const router    = express.Router();
 const bcrypt    = require('bcryptjs');
 const User      = require('../models/users');
-const Topic     = require('../models/topic');
 
-// create route
+// create
 router.post('/', async (req, res) => {
     const password       = req.body.password;
     const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
@@ -25,7 +24,7 @@ router.post('/', async (req, res) => {
 
             res.json({
                 status:     200,
-                data:       'register successful',
+                data:       'successful',
                 username:   req.session.username
             })
         } else {
@@ -43,7 +42,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// show route
+// show
 router.get('/:id', async (req, res) => {
     try {
         const foundUser = await User.findById(req.session.userId);
@@ -58,11 +57,11 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// update route
+// update
 router.put('/:id/', async (req, res) => {
     try {
         if(req.session.userId === req.params.id) {
-            const updatedUser = await User.findByIdAndUpdate(req.session.userId, req.body);
+            const updatedUser = await User.findByIdAndUpdate(req.session.userId, req.body, {new: true});
             res.send({
                 status: 200,
                 user: updatedUser
@@ -76,6 +75,7 @@ router.put('/:id/', async (req, res) => {
     }
 });
 
+// delete
 router.delete('/:id', async (req, res) => {
     try {
         if(req.session.userId === req.params.id) {
