@@ -54,17 +54,20 @@ router.post('/', async (req, res) => {
     }
 });
 
-// update // waiting for help 
+// update
 router.put('/:id', async (req, res) => {
     try {
         if(req.session.logged) {
-            const findUpdatedTopic           = Topic.findByIdAndUpdate(req.params.id, req.body, {new: true});
-            const findFoundUsers             = User.findOne({'topics._id': req.params.id});
-            const [updatedTopic, foundUsers] = await Promise.all([findUpdatedTopic, findFoundUsers]);
-
-            foundUsers.topics.id(req.params.id).remove();
-            foundUsers.topics.push(updatedTopic);
-            await foundUsers.save();
+            const updatedTopic           = await Topic.findByIdAndUpdate(req.params.id, req.body, {new: true});
+            const foundUsers             = await User.find({});
+            
+            foundUsers.forEach ( (user) => {
+                if(user.topics['topics._id'] === req.params.id){
+                    user.topics.id(req.params.id).remove();
+                    user.topics.push(updatedTopic);
+                    await user.save();
+                }     
+            });
             res.json({
                 status: 200,
                 data:   'successful'
