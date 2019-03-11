@@ -5,7 +5,8 @@ const bcrypt    = require('bcryptjs');
 
 router.post('/login', async (req, res) => {
     try {
-       const foundUser = await User.find({username: req.body.username}) ;
+       const foundUser = await User.findOne({'username': req.body.username});
+
        if(foundUser) {
            if(bcrypt.compareSync(req.body.password, foundUser.password)) {
                req.session.message  = '';
@@ -17,6 +18,7 @@ router.post('/login', async (req, res) => {
                    status:   200,
                    data:     'login successful',
                    username: req.session.username,
+                   userId:   req.session.userId,   
                    message:  req.session.message
 
                });
@@ -37,7 +39,7 @@ router.post('/login', async (req, res) => {
            })
        }
     } catch (err) {
-        console.log('err');
+        console.log(err);
         res.send(err);    
     }
 });

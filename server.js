@@ -43,6 +43,11 @@ app.use('/api/v1/topics', topicsController);
 app.use('/auths', authsController);
 app.use('/users', usersController);
 
+app.use('/users/:id/topics', (req, res, next) => {
+    req.userId = req.session.id;
+    next();
+}, topicsController);
+
 app.listen(process.env.PORT || 9000, () => {
     console.log('listening on port 9000');
 })

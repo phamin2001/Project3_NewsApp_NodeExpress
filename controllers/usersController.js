@@ -6,13 +6,14 @@ const User      = require('../models/user');
 // create
 router.post('/', async (req, res) => {
     const password       = req.body.password;
+    console.log(password, 'password');
     const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
     const userDbEntry        = {};
-    userDbEntry.username     = req.session.username;
+    userDbEntry.username     = req.body.username;
     userDbEntry.password     = hashedPassword;
-    userDbEntry.email        = req.session.email;
-    userDbEntry.displayName  = req.session.displayName;
+    userDbEntry.email        = req.body.email;
+    userDbEntry.displayName  = req.body.displayName;
 
     try {
         const userExists      = await User.findOne({'username': userDbEntry.username});
@@ -67,6 +68,7 @@ router.put('/:id/', async (req, res) => {
                 user: updatedUser
             })
         } else {
+            // console.log('ERROR');
            throw new Error('You are not authorized');
         }
     } catch (err) {

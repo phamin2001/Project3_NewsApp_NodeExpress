@@ -42,11 +42,12 @@ router.post('/', async (req, res) => {
             loggedUser.topics.push(createdTopic);
             await loggedUser.save();
             res.json({
-                status: 200,
-                data: 'successful'
+                status:   200,
+                topi:     createdTopic,
+                data:     'successful'
             });
         } else {
-            throw new Error('You didnot log in.');
+            throw new Error('You did not log in.');
         }
     } catch (err) {
         console.log(err);
@@ -61,19 +62,19 @@ router.put('/:id', async (req, res) => {
             const updatedTopic           = await Topic.findByIdAndUpdate(req.params.id, req.body, {new: true});
             const foundUsers             = await User.find({});
             
-            foundUsers.forEach ( (user) => {
+            for ( const user of foundUsers) {
                 if(user.topics['topics._id'] === req.params.id){
                     user.topics.id(req.params.id).remove();
                     user.topics.push(updatedTopic);
                     await user.save();
                 }     
-            });
+            };
             res.json({
                 status: 200,
                 data:   'successful'
             })
         } else {
-            throw new Error('You didnot log in.');
+            throw new Error('You did not log in.');
         }
     } catch (err) {
         console.log(err);
@@ -97,7 +98,7 @@ router.delete('/:id', async (req, res) => {
                 data: 'successful'
             })
         } else {
-            throw new Error('You didnot log in');
+            throw new Error('You did not log in');
         }
     } catch (err) {
         console.log(err);
