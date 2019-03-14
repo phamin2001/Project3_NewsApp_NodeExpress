@@ -21,12 +21,14 @@ router.post('/', async (req, res) => {
             const createdUser    = await User.create(userDbEntry);
             req.session.message  = '';
             req.session.username = createdUser.username;
+            req.session.userId   = createdUser._id;
             req.session.logged   = true;
 
             res.json({
                 status:     200,
                 data:       'successful',
-                username:   req.session.username
+                username:   req.session.username,
+                userId:     req.session.userId
             })
         } else {
             console.log('User Exists.');
