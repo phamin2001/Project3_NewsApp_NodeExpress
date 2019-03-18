@@ -51,8 +51,10 @@ router.get('/:id', async (req, res) => {
         const foundUser = await User.findById(req.session.userId);
         res.json({
             status: 200, 
-            user:   foundUser,
-
+            username:        foundUser.username,
+            userId:          foundUser._id,
+            userEmail:       foundUser.email,
+            userDisplayName: foundUser.displayName
         })
     } catch (err) {
         console.log(err);
@@ -67,7 +69,10 @@ router.put('/:id/', async (req, res) => {
             const updatedUser = await User.findByIdAndUpdate(req.session.userId, req.body, {new: true});
             res.send({
                 status: 200,
-                user: updatedUser
+                username:        updatedUser.username,
+                userId:          updatedUser._id,
+                userEmail:       updatedUser.email,
+                userDisplayName: updatedUser.displayName
             })
         } else {
             // console.log('ERROR');
@@ -86,7 +91,10 @@ router.delete('/:id', async (req, res) => {
             const deletedUser = await User.findByIdAndDelete(req.session.userId);
             res.json({
                 status: 200, 
-                user: deletedUser
+                username:        deletedUser.username,
+                userId:          deletedUser._id,
+                userEmail:       deletedUser.email,
+                userDisplayName: deletedUser.displayName
             })
         } else {
             throw new Error('You are not authorized.');
