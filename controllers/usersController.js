@@ -65,18 +65,32 @@ router.get('/:id', async (req, res) => {
 // update
 router.put('/:id/', async (req, res) => {
     try {
-        if(req.session.userId === req.params.id) {
-            const updatedUser = await User.findByIdAndUpdate(req.session.userId, req.body, {new: true});
-            res.send({
-                status: 200,
-                username:        updatedUser.username,
-                userId:          updatedUser._id,
-                userEmail:       updatedUser.email,
-                userDisplayName: updatedUser.displayName
-            })
+        const currentUser      = await User.findById(req.session.userId);
+        const usernameExists   = await User.findOne({'username': req.body.username});
+        console.log(currentUser, 'currentuser');
+        console.log(usernameExists, 'usernameExist');
+        if(!usernameExists || (currentUser.username === req.body.username)) {
+
+            if(req.session.userId === req.params.id) {
+                const updatedUser = await User.findByIdAndUpdate(req.session.userId, req.body, {new: true});
+                res.send({
+                    status: 200,
+                    username:        updatedUser.username,
+                    userId:          updatedUser._id,
+                    userEmail:       updatedUser.email,
+                    userDisplayName: updatedUser.displayName
+                })
+            } else {
+                // console.log('ERROR');
+               throw new Error('You are not authorized');
+            }
         } else {
-            // console.log('ERROR');
-           throw new Error('You are not authorized');
+            console.log('Username already Exists.');
+            req.session.message = "User aleready exists, enter different username.";
+            res.json({
+                status:   400, 
+                message:  req.session.message
+            })
         }
     } catch (err) {
         console.log(err);
