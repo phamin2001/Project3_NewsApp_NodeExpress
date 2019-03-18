@@ -67,8 +67,7 @@ router.put('/:id/', async (req, res) => {
     try {
         const currentUser      = await User.findById(req.session.userId);
         const usernameExists   = await User.findOne({'username': req.body.username});
-        console.log(currentUser, 'currentuser');
-        console.log(usernameExists, 'usernameExist');
+       
         if(!usernameExists || (currentUser.username === req.body.username)) {
 
             if(req.session.userId === req.params.id) {
@@ -81,7 +80,6 @@ router.put('/:id/', async (req, res) => {
                     userDisplayName: updatedUser.displayName
                 })
             } else {
-                // console.log('ERROR');
                throw new Error('You are not authorized');
             }
         } else {
