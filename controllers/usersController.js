@@ -6,7 +6,6 @@ const User      = require('../models/user');
 // create
 router.post('/', async (req, res) => {
     const password       = req.body.password;
-    console.log(password, 'password');
     const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
     const userDbEntry        = {};
@@ -17,7 +16,7 @@ router.post('/', async (req, res) => {
 
     try {
         const userExists      = await User.findOne({'username': userDbEntry.username});
-        if(!userExists) {
+        if( !userExists && (userDbEntry.username != '') ){
             const createdUser    = await User.create(userDbEntry);
             req.session.message  = '';
             req.session.username = createdUser.username;
@@ -32,7 +31,7 @@ router.post('/', async (req, res) => {
             })
         } else {
             console.log('User Exists.');
-            req.session.message = "User aleready exists, make another account.";
+            req.session.message = 'User aleready exists or Username field is empty, make another account.';
             res.json({
                 status:   400, 
                 message:  req.session.message
@@ -68,7 +67,7 @@ router.put('/:id/', async (req, res) => {
         const currentUser      = await User.findById(req.session.userId);
         const usernameExists   = await User.findOne({'username': req.body.username});
        
-        if(!usernameExists || (currentUser.username === req.body.username)) {
+        if( (!usernameExists || (currentUser.username === req.body.username)) && (req.body.username != '') ) {
 
             if(req.session.userId === req.params.id) {
                 const updatedUser = await User.findByIdAndUpdate(req.session.userId, req.body, {new: true});
@@ -84,7 +83,7 @@ router.put('/:id/', async (req, res) => {
             }
         } else {
             console.log('Username already Exists.');
-            req.session.message = "User aleready exists, enter different username.";
+            req.session.message = 'User aleready exists or Username field is empty. Enter different username.';
             res.json({
                 status:   400, 
                 message:  req.session.message
