@@ -63,7 +63,7 @@ router.put('/:id', async (req, res) => {
             const foundUsers             = await User.find({});
             
             for ( const user of foundUsers) {
-                if(user.topics['topics._id'] === req.params.id){
+                if(user.topics.id(req.params.id)){
                     user.topics.id(req.params.id).remove();
                     user.topics.push(updatedTopic);
                     await user.save();

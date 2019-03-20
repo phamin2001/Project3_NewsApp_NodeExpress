@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const TopicSchema = new mongoose.Schema({
     title:      {type: String, required: true},
-    data:       {type: Date},
-    writer:     {type: String}
+    writer:     {type: String},
+    date:       {type: Date}
 });
 
 module.exports = mongoose.model('Topic', TopicSchema);

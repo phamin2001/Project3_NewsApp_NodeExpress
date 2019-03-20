@@ -53,7 +53,8 @@ router.get('/:id', async (req, res) => {
             username:        foundUser.username,
             userId:          foundUser._id,
             userEmail:       foundUser.email,
-            userDisplayName: foundUser.displayName
+            userDisplayName: foundUser.displayName,
+            userTopics:      foundUser.topics
         })
     } catch (err) {
         console.log(err);
