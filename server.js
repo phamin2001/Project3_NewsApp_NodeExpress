@@ -44,7 +44,7 @@ app.use('/auths', authsController);
 app.use('/users', usersController);
 
 app.use('/users/:id/topics', (req, res, next) => {
-    req.userId = req.session.id;
+    req.userId = req.params.id;
     next();
 }, topicsController);
 

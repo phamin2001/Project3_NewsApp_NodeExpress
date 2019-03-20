@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
 // show
 router.get('/:id', async (req, res) => {
     try {
-        const foundUser = await User.findById(req.session.userId);
+        const foundUser = await User.findById(req.params.id); // fix usercontroller
         res.json({
             status: 200, 
             username:        foundUser.username,
