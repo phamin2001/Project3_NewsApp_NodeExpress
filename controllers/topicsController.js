@@ -105,9 +105,12 @@ router.put('/:id', async (req, res) => {
                 const foundUsers             = await User.find({});
                 
                 for ( const user of foundUsers) {
+                    console.log(user.topics.id(req.params.id), 'update topic')
                     if(user.topics.id(req.params.id)){
                         user.topics.id(req.params.id).remove();
+                        console.log(user.topics.id(req.params.id), 'update topic')
                         user.topics.push(updatedTopic);
+                        
                         await user.save();
                     }     
                 };
