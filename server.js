@@ -28,7 +28,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    // origin: 'http://localhost:3000',
+    origin: 'http://berserk-grain.surge.sh/',
     credentials: true,
     optionsSuccessStatus: 200
 }
@@ -48,6 +49,6 @@ app.use('/users/:id/topics', (req, res, next) => {
     next();
 }, topicsController);
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 9000 , () => {
     console.log('listening on port 9000');
 })
