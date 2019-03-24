@@ -48,6 +48,6 @@ app.use('/users/:id/topics', (req, res, next) => {
     next();
 }, topicsController);
 
-app.listen(process.env.PORT || 9000, () => {
+app.listen(process.env.PORT, () => {
     console.log('listening on port 9000');
 })
