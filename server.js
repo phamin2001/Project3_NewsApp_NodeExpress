@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 
 const corsOptions = {
     // origin: 'http://localhost:3000',
-    origin: 'http://berserk-grain.surge.sh/',
+    origin: 'http://spotty-oranges.surge.sh',
     credentials: true,
     optionsSuccessStatus: 200
 }
