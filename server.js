@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 
 const corsOptions = {
     // origin: 'http://localhost:3000',
-    origin: 'http://spotty-oranges.surge.sh',
+    origin: 'http://resonant-bit.surge.sh',
     credentials: true,
     optionsSuccessStatus: 200
 }
