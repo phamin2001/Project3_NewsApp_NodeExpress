@@ -21,7 +21,8 @@ store.on('error', function(error) {
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: store
 }));
 
 app.use(bodyParser.urlencoded({extended: false}));
